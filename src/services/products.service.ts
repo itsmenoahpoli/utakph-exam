@@ -1,11 +1,13 @@
 import { db } from "@/lib";
 import type { TProduct } from "@/types/product";
 
+const collection = () => {
+  return db.collection("products");
+};
+
 export const ProductsService = {
   getProducts: async function () {
-    const colRef = db.collection("products");
-
-    return await colRef
+    return collection()
       .get()
       .then((result) => {
         return result.forEach((doc) => doc.data());
@@ -16,9 +18,7 @@ export const ProductsService = {
   },
 
   addProduct: async function (productData: TProduct) {
-    const colRef = db.collection("products");
-
-    colRef
+    return collection()
       .add(productData)
       .then((docRef) => {
         console.log("Document written with ID: ", docRef.id);
@@ -29,9 +29,8 @@ export const ProductsService = {
   },
 
   updateProduct: async function (id: string, productData: TProduct) {
-    const colRef = db.collection("products").doc(id);
-
-    colRef
+    return collection()
+      .doc(id)
       .update(productData)
       .then(() => {
         console.log("Document successfully updated!");
@@ -42,9 +41,8 @@ export const ProductsService = {
   },
 
   getProduct: async function (id: string) {
-    const colRef = db.collection("products").doc(id);
-
-    return colRef
+    return collection()
+      .doc(id)
       .get()
       .then((doc) => {
         return doc.exists ? doc.data() : null;
@@ -55,9 +53,8 @@ export const ProductsService = {
   },
 
   deleteProduct: async function (id: string) {
-    const colRef = db.collection("products").doc(id);
-
-    return colRef
+    return collection()
+      .doc(id)
       .delete()
       .then(() => {
         console.log("Document successfully deleted!");
